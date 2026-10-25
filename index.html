@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#087a47">
+  <meta name="description" content="Tutorial interactivo paso a paso del proceso de Certificación Articulación con la Media 2026.">
+  <title>Certificación Articulación con la Media · 2026</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --green-950: #073d2b;
+      --green-900: #07583a;
+      --green-800: #087a47;
+      --green-700: #11945a;
+      --green-100: #e4f4eb;
+      --green-50: #f2faf5;
+      --ink: #172b22;
+      --muted: #718078;
+      --line: #e6ece8;
+      --canvas: #f5f7f5;
+      --white: #fff;
+      --amber: #a76308;
+      --amber-bg: #fff4df;
+      --red: #b53b36;
+      --red-bg: #fff0ee;
+      --shadow: 0 12px 32px rgba(21, 47, 34, .07);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    .app-shell { min-height: 100vh; }
+    .sidebar {
+      position: fixed; inset: 0 auto 0 0; z-index: 5; display: flex; flex-direction: column;
+      width: 252px; padding: 25px 16px 18px; background: var(--green-950); color: #dcebe3;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 0 10px 30px; }
+    .brand-symbol {
+      display: block; width: 47px; height: 47px; flex: 0 0 auto; padding: 4px;
+      border-radius: 10px; background: white; object-fit: contain;
+    }
+    .brand-name { color: white; font-size: 15px; font-weight: 750; letter-spacing: .2px; }
+    .brand-caption { margin-top: 4px; color: #a4c3b2; font-size: 11px; }
+    .nav-label { padding: 0 12px 9px; color: #89aa98; font-size: 10px; font-weight: 750; letter-spacing: 1.25px; text-transform: uppercase; }
+    .nav-list { display: grid; gap: 5px; }
+    .nav-link {
+      display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px; border: 0;
+      border-radius: 9px; background: transparent; color: #c6d9ce; text-align: left; font-size: 13px;
+      transition: background .18s, color .18s;
+    }
+    .nav-link:hover, .nav-link.active { background: rgba(255,255,255,.11); color: white; }
+    .nav-link.active { box-shadow: inset 3px 0 #64d294; }
+    .nav-icon { display: grid; place-items: center; width: 19px; font-size: 16px; }
+    .nav-count { margin-left: auto; padding: 2px 7px; border-radius: 20px; background: rgba(255,255,255,.12); font-size: 10px; }
+    .sidebar-bottom { margin-top: auto; }
+    .privacy-note { padding: 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; background: rgba(255,255,255,.05); }
+    .privacy-note strong { display: block; margin-bottom: 5px; color: #e7f3eb; font-size: 11px; }
+    .privacy-note p { margin: 0; color: #aac3b4; font-size: 10px; line-height: 1.6; }
+    .sidebar-footer { padding: 15px 10px 0; color: #90ad9c; font-size: 10px; }
+    .main-area { min-height: 100vh; margin-left: 252px; }
+    .topbar {
+      position: sticky; top: 0; z-index: 4; display: flex; align-items: center; justify-content: space-between;
+      min-height: 68px; padding: 0 38px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.94);
+      backdrop-filter: blur(12px);
+    }
+    .breadcrumb { color: var(--muted); font-size: 12px; }
+    .breadcrumb strong { color: var(--ink); font-weight: 650; }
+    .topbar-right { display: flex; align-items: center; gap: 13px; color: var(--muted); font-size: 12px; }
+    .user-avatar { display: grid; place-items: center; width: 33px; height: 33px; border-radius: 50%; background: var(--green-100); color: var(--green-900); font-size: 12px; font-weight: 750; }
+    main { width: min(1420px, 100%); margin: 0 auto; padding: 34px 38px 56px; }
+    .view[hidden] { display: none; }
+    .page-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; margin-bottom: 26px; }
+    .eyebrow { margin: 0 0 8px; color: var(--green-800); font-size: 10px; font-weight: 800; letter-spacing: 1.35px; text-transform: uppercase; }
+    h1 { margin: 0; color: #172a21; font-size: clamp(23px, 2.3vw, 30px); font-weight: 730; letter-spacing: -.8px; }
+    .page-subtitle { max-width: 670px; margin: 9px 0 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 15px;
+      border: 1px solid transparent; border-radius: 9px; background: var(--green-800); color: white;
+      font-size: 12px; font-weight: 700; text-decoration: none; transition: background .15s, transform .15s;
+    }
+    .button:hover { transform: translateY(-1px); background: var(--green-900); }
+    .button.secondary { border-color: var(--line); background: white; color: var(--ink); }
+    .button.secondary:hover { background: var(--green-50); }
+    .button.small { min-height: 34px; padding: 0 11px; font-size: 11px; }
+    .button:focus-visible, .nav-link:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+      outline: 3px solid rgba(17,148,90,.28); outline-offset: 2px;
+    }
+    .info-banner { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; padding: 13px 15px; border: 1px solid #f0dfb9; border-radius: 9px; background: #fffaf0; color: #76531e; font-size: 10px; line-height: 1.6; }
+    .info-banner strong { color: #69470f; }
+    .resource-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 15px; }
+    .resource-card { padding: 19px; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: 0 3px 12px rgba(18,46,32,.025); }
+    .resource-card h3 { margin: 0; font-size: 13px; }
+    .resource-card p { margin: 7px 0 15px; color: var(--muted); font-size: 11px; line-height: 1.65; }
+    .resource-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .file-type { padding: 5px 8px; border-radius: 6px; background: #f0f3f1; color: #68776e; font-size: 9px; font-weight: 750; }
+    .resource-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--green-50); color: var(--green-800); font-size: 16px; }
+    .resource-link { color: var(--green-800); font-size: 11px; font-weight: 700; text-decoration: none; }
+    .resource-link:hover { text-decoration: underline; }
+    .portal-list { display: grid; gap: 0; }
+    .portal-link { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 0; border-bottom: 1px solid #eff2f0; text-decoration: none; }
+    .portal-link:last-child { border-bottom: 0; }
+    .portal-link strong { display: block; font-size: 11px; }
+    .portal-link small { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; }
+    .external-arrow { color: var(--green-800); font-size: 14px; }
+    .video-card { grid-column: 1 / -1; }
+    .video-frame { overflow: hidden; margin-top: 14px; border-radius: 10px; background: #14251c; }
+    video { display: block; width: 100%; max-height: 470px; aspect-ratio: 16 / 9; background: #14251c; }
+    .video-frame iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #14251c; }
+    .video-caption { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; color: var(--muted); font-size: 10px; }
+    .video-caption a { color: var(--green-800); font-weight: 700; text-decoration: none; }
+    .checklist-layout { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(260px,.8fr); gap: 16px; align-items: start; }
+    .checklist-card { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .checklist-card h2 { margin: 0 0 5px; font-size: 14px; }
+    .checklist-card > p { margin: 0 0 17px; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .step-number { display: grid; place-items: center; width: 25px; height: 25px; flex: 0 0 auto; border-radius: 8px; background: var(--green-50); color: var(--green-800); font-size: 10px; font-weight: 750; }
+    .checklist-item { display: flex; align-items: flex-start; gap: 11px; padding: 13px 0; border-top: 1px solid #eff2f0; }
+    .checklist-item .step-number { margin-top: 1px; }
+    .checklist-item strong { display: block; font-size: 11px; }
+    .checklist-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .side-note { padding: 16px; border: 1px solid #d9e9df; border-radius: 11px; background: var(--green-50); }
+    .side-note h3 { margin: 0 0 9px; color: var(--green-900); font-size: 12px; }
+    .side-note p, .side-note li { color: #53665b; font-size: 10px; line-height: 1.7; }
+    .side-note p { margin: 0; }
+    .side-note ul { margin: 9px 0 0; padding-left: 17px; }
+    .footer-note { margin-top: 28px; color: #8a968e; font-size: 9px; text-align: center; }
+    .tutorial-progress-card { margin: 4px 0 17px; padding: 16px 19px; border: 1px solid var(--line); border-radius: 11px; background: white; }
+    .tutorial-progress-top { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px; color: var(--muted); font-size: 10px; }
+    .tutorial-progress-top strong { color: var(--ink); font-size: 11px; }
+    .tutorial-progress-track { height: 7px; overflow: hidden; border-radius: 10px; background: #edf1ee; }
+    .tutorial-progress-fill { width: 0; height: 100%; border-radius: inherit; background: var(--green-700); transition: width .22s; }
+    .tutorial-layout { display: grid; grid-template-columns: minmax(205px,.32fr) minmax(0,1fr); gap: 16px; align-items: start; }
+    .tutorial-step-nav { display: grid; gap: 5px; padding: 9px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .tutorial-step-button { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 10px 9px; border: 0; border-radius: 8px; background: transparent; color: #58665d; text-align: left; }
+    .tutorial-step-button:hover { background: #f6f9f7; }
+    .tutorial-step-button.active { background: var(--green-50); color: var(--green-900); }
+    .tutorial-step-index { display: grid; place-items: center; width: 25px; height: 25px; flex: 0 0 auto; border: 1px solid #e2e9e4; border-radius: 8px; background: white; color: #68766d; font-size: 9px; font-weight: 750; }
+    .tutorial-step-button.active .tutorial-step-index { border-color: #b8dec6; background: var(--green-100); color: var(--green-900); }
+    .tutorial-step-button.complete .tutorial-step-index { border-color: var(--green-700); background: var(--green-700); color: white; }
+    .tutorial-step-copy { min-width: 0; padding-top: 2px; }
+    .tutorial-step-copy strong { display: block; font-size: 10px; line-height: 1.4; }
+    .tutorial-step-copy small { display: block; margin-top: 3px; color: #8a968e; font-size: 9px; }
+    .tutorial-detail { min-height: 450px; padding: 25px 27px; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: 0 3px 12px rgba(18,46,32,.025); }
+    .tutorial-detail-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 17px; }
+    .tutorial-step-kicker { color: var(--green-800); font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+    .tutorial-done-tag { padding: 5px 9px; border-radius: 20px; background: var(--green-100); color: var(--green-900); font-size: 9px; font-weight: 700; }
+    .tutorial-detail h2 { margin: 0; font-size: 21px; letter-spacing: -.4px; }
+    .tutorial-intro { margin: 9px 0 20px; color: var(--muted); font-size: 11px; line-height: 1.75; }
+    .tutorial-instructions { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: tutorial; }
+    .tutorial-instructions li { position: relative; padding: 0 0 0 34px; color: #536159; font-size: 11px; line-height: 1.65; counter-increment: tutorial; }
+    .tutorial-instructions li::before { position: absolute; top: 0; left: 0; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 7px; background: #f0f5f1; color: var(--green-800); content: counter(tutorial); font-size: 9px; font-weight: 750; }
+    .tutorial-instructions li strong { color: var(--ink); }
+    .tutorial-callout { margin-top: 19px; padding: 12px 14px; border: 1px solid #e5eee8; border-radius: 9px; background: #f7faf8; color: #53665b; font-size: 10px; line-height: 1.65; }
+    .tutorial-callout.warning { border-color: #f0dfb9; background: #fffaf0; color: #76531e; }
+    .tutorial-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .tutorial-actions .button { min-height: 35px; font-size: 10px; }
+    .tutorial-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 23px; padding-top: 15px; border-top: 1px solid #eff2f0; }
+    .tutorial-footer .button { min-height: 36px; }
+    .tutorial-check { display: flex; align-items: center; gap: 8px; color: #536159; font-size: 10px; font-weight: 650; }
+    .tutorial-check input { width: 15px; height: 15px; margin: 0; accent-color: var(--green-800); }
+    .tutorial-video { margin-top: 19px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .tutorial-video-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .tutorial-video-heading h2 { margin: 0; font-size: 13px; }
+    .tutorial-video-heading p { margin: 4px 0 0; color: var(--muted); font-size: 10px; }
+    .tutorial-video .video-frame { margin-top: 13px; }
+    .section-divider { margin: 20px 0 13px; border: 0; border-top: 1px solid var(--line); }
+    .toast { position: fixed; right: 22px; bottom: 22px; z-index: 20; max-width: min(390px,calc(100vw - 32px)); padding: 13px 16px; border-radius: 10px; background: #173d2a; color: white; box-shadow: var(--shadow); font-size: 11px; line-height: 1.5; }
+    .toast.error { background: #922f2b; }
+    .toast[hidden] { display: none; }
+    .mobile-menu { display: none; }
+
+    @media (max-width: 1050px) {
+      .sidebar { width: 220px; }
+      .main-area { margin-left: 220px; }
+      main { padding-right: 25px; padding-left: 25px; }
+      .topbar { padding: 0 25px; }
+    }
+    @media (max-width: 720px) {
+      .sidebar { position: fixed; inset: 0 auto 0 0; width: 270px; transform: translateX(-100%); transition: transform .2s; box-shadow: var(--shadow); }
+      body.menu-open .sidebar { transform: translateX(0); }
+      .main-area { margin-left: 0; }
+      .topbar { min-height: 59px; padding: 0 17px; }
+      .mobile-menu { display: inline-grid; place-items: center; width: 33px; height: 33px; margin-right: 9px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--ink); }
+      .breadcrumb-wrap { display: flex; align-items: center; }
+      .topbar-right > span { display: none; }
+      main { padding: 24px 17px 40px; }
+      .page-heading { align-items: flex-start; }
+      .resource-grid, .checklist-layout { grid-template-columns: 1fr; }
+      .video-card { grid-column: auto; }
+      .video-caption { align-items: flex-start; flex-direction: column; }
+      .tutorial-layout { grid-template-columns: 1fr; }
+      .tutorial-step-nav { display: flex; overflow-x: auto; }
+      .tutorial-step-button { min-width: 145px; }
+      .tutorial-detail { min-height: 0; padding: 20px 17px; }
+      .tutorial-footer { align-items: flex-start; flex-wrap: wrap; }
+    }
+    @media (max-width: 430px) {
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="brand">
+        <img class="brand-symbol" src="./sena-logo.png" alt="Logo del SENA">
+        <div><div class="brand-name">Certificación</div><div class="brand-caption">Articulación con la Media · 2026</div></div>
+      </div>
+      <div class="nav-label">Espacio de trabajo</div>
+      <nav class="nav-list">
+        <button class="nav-link active" data-view="dashboard"><span class="nav-icon">☷</span>Tutorial paso a paso</button>
+        <button class="nav-link" data-view="checklist"><span class="nav-icon">✓</span>Lista documental</button>
+        <button class="nav-link" data-view="resources"><span class="nav-icon">↗</span>Recursos y video</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="privacy-note">
+          <strong>Avance del tutorial</strong>
+          <p>Tu paso actual y las marcas de avance se guardan en este navegador.</p>
+        </div>
+        <div class="sidebar-footer">Vigencia 2026 · Herramienta de apoyo</div>
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="breadcrumb-wrap">
+          <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menú" aria-expanded="false">☰</button>
+          <div class="breadcrumb">Certificación 2026 <span aria-hidden="true"> / </span> <strong id="breadcrumbCurrent">Tutorial paso a paso</strong></div>
+        </div>
+        <div class="topbar-right"><span id="todayLabel"></span><div class="user-avatar" aria-hidden="true">26</div></div>
+      </header>
+
+      <main>
+        <section class="view" id="view-dashboard">
+          <div class="page-heading">
+            <div><p class="eyebrow">Guía práctica · vigencia 2026</p><h1>Cómo hacer el proceso de certificación</h1><p class="page-subtitle">Sigue esta guía en orden para alistar la ficha, revisar a cada aprendiz, reunir los soportes y dejar la documentación lista para el 3 de noviembre.</p></div>
+          </div>
+
+          <div class="tutorial-progress-card">
+            <div class="tutorial-progress-top"><strong>Tu avance en el tutorial</strong><span id="tutorialProgressText">0 de 7 pasos completados</span></div>
+            <div class="tutorial-progress-track" id="tutorialProgressTrack" role="progressbar" aria-label="Avance del tutorial" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"><div class="tutorial-progress-fill" id="tutorialProgressFill"></div></div>
+          </div>
+          <div class="tutorial-layout">
+            <nav class="tutorial-step-nav" id="tutorialStepNav" aria-label="Pasos del proceso"></nav>
+            <article class="tutorial-detail" id="tutorialStepDetail" aria-live="polite"></article>
+          </div>
+          <section class="tutorial-video">
+            <div class="tutorial-video-heading"><div><h2>Video de orientación</h2><p>Reproduce el video de YouTube mientras sigues los pasos.</p></div><span class="file-type">YOUTUBE</span></div>
+            <div class="video-frame"><iframe src="https://www.youtube.com/embed/O6qF7FrMzBU" title="Video de orientación del proceso de certificación 2026" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+            <div class="video-caption"><span>Si el reproductor incrustado no está disponible, abre el video directamente en YouTube.</span><a href="https://youtu.be/O6qF7FrMzBU" target="_blank" rel="noopener noreferrer">Abrir en YouTube ↗</a></div>
+          </section>
+          <div class="footer-note">Marca cada paso cuando lo hayas completado. El avance del tutorial se guarda en este navegador.</div>
+        </section>
+
+        <section class="view" id="view-checklist" hidden>
+          <div class="page-heading"><div><p class="eyebrow">Documentos y validaciones</p><h1>Lista documental</h1><p class="page-subtitle">Confirma el orden de los soportes y revisa las condiciones que pueden detener el trámite.</p></div><button class="button secondary" data-open-view="resources">Abrir recursos ↗</button></div>
+          <div class="checklist-layout">
+            <section class="checklist-card">
+              <h2>Un PDF único con los seis documentos</h2><p>Para cada aprendiz, reúne estos seis documentos en un solo PDF y guárdalo directamente dentro de la carpeta de su ficha. Cada oficio institucional debe radicarse por OnBase.</p>
+              <div class="info-banner"><span aria-hidden="true">ⓘ</span><div><strong>Importante:</strong> crea una carpeta por ficha. Dentro de ella guarda un PDF por aprendiz, sin crear subcarpetas individuales. El nombre del archivo sigue el formato TI_1075643449_3185400.pdf.</div></div>
+              <div class="checklist-item"><div class="step-number">01</div><div><strong>Oficio de paz y salvo y aprendices certificables</strong><span>Emitido por la Institución Educativa y radicado por OnBase.</span></div></div>
+              <div class="checklist-item"><div class="step-number">02</div><div><strong>Oficio de aprobación de competencias transversales</strong><span>Emitido por la Institución Educativa y radicado por OnBase.</span></div></div>
+              <div class="checklist-item"><div class="step-number">03</div><div><strong>Documento de identidad</strong><span>Legible, vigente y correspondiente al documento actual del aprendiz.</span></div></div>
+              <div class="checklist-item"><div class="step-number">04</div><div><strong>Certificado de la Registraduría</strong><span>Con vigencia 2026. Si cumplió 18 y no se expide certificado de la cédula nueva, consulta por el documento anterior TI o el registro civil.</span></div></div>
+              <div class="checklist-item"><div class="step-number">05</div><div><strong>Certificado de la Agencia Pública de Empleo (APE)</strong><span>El certificado debe tener fecha de expedición de 2026.</span></div></div>
+              <div class="checklist-item"><div class="step-number">06</div><div><strong>Formato GFPI-F-023 V06 totalmente diligenciado</strong><span>Formato para la planeación, seguimiento y evaluación de la etapa productiva. Inclúyelo como sexto documento del mismo PDF.</span></div></div>
+            </section>
+            <aside>
+              <div class="side-note"><h3>Verificación de identidad</h3><p>Revisa la vigencia del documento de identidad de cada aprendiz. Si ya cumplió la mayoría de edad, no se tramita la certificación hasta recibir un documento vigente.</p></div>
+              <div class="side-note" style="margin-top:13px"><h3>Actualizaciones en Sofía Plus</h3><p>Si detectas cambios en nombres, apellidos, tildes u otros datos, solicita la actualización y adjunta el documento vigente, legible por ambas caras, al correo:</p><ul><li><a href="mailto:gaecda@sena.edu.co">gaecda@sena.edu.co</a></li></ul></div>
+              <div class="side-note" style="margin-top:13px"><h3>Si cumplió 18 años</h3><p>Si la Registraduría aún no expide certificado de vigencia de la nueva cédula, consulta la opción de certificado del documento anterior TI o solicita el certificado de registro civil.</p></div>
+            </aside>
+          </div>
+          <div class="footer-note">Verifica los requisitos, formatos y canales oficiales con tu centro de formación.</div>
+        </section>
+
+        <section class="view" id="view-resources" hidden>
+          <div class="page-heading"><div><p class="eyebrow">Plantillas y enlaces oficiales</p><h1>Recursos del proceso</h1><p class="page-subtitle">Descarga los dos oficios, consulta los portales de la Registraduría y APE, y reproduce el video de orientación.</p></div></div>
+          <div class="resource-grid">
+            <article class="resource-card">
+              <div class="resource-meta"><span class="resource-icon" aria-hidden="true">▤</span><span class="file-type">WORD · .DOCX</span></div>
+              <h3>Oficio de aprendices a certificar</h3><p>Formato para que la Institución Educativa relacione aprendices a paz y salvo y certificables. Recuerda radicarlo por OnBase.</p>
+              <a class="button small" href="./Oficio%20Aprendices%20a%20Certificar%20para%20las%20I.E..docx" download="Oficio-Aprendices-a-Certificar-para-las-IE.docx">↓ Descargar oficio</a>
+            </article>
+            <article class="resource-card">
+              <div class="resource-meta"><span class="resource-icon" aria-hidden="true">▤</span><span class="file-type">WORD · .DOCX</span></div>
+              <h3>Oficio de competencias transversales</h3><p>Formato para relacionar aprendices que aprobaron el componente social y las competencias transversales. Radicar por OnBase.</p>
+              <a class="button small" href="./Oficio%20I.E.%20Componente%20Social%20-%20Transversales.docx" download="Oficio-IE-Componente-Social-Transversales.docx">↓ Descargar oficio</a>
+            </article>
+            <article class="resource-card">
+              <div class="resource-meta"><span class="resource-icon" aria-hidden="true">↗</span><span class="file-type">PORTALES OFICIALES</span></div>
+              <h3>Certificados de vigencia</h3><p>Selecciona el portal correspondiente al documento que necesitas consultar.</p>
+              <div class="portal-list">
+                <a class="portal-link" href="https://consultasrc.registraduria.gov.co/ProyectoSCCRC/" target="_blank" rel="noopener noreferrer"><span><strong>Registro civil · Registraduría</strong><small>Consulta y certificado de registro civil</small></span><span class="external-arrow">↗</span></a>
+                <a class="portal-link" href="https://certvigenciacedula.registraduria.gov.co/Datos.aspx" target="_blank" rel="noopener noreferrer"><span><strong>Vigencia de cédula</strong><small>Certificado de vigencia de cédula de ciudadanía</small></span><span class="external-arrow">↗</span></a>
+              </div>
+            </article>
+            <article class="resource-card">
+              <div class="resource-meta"><span class="resource-icon" aria-hidden="true">↗</span><span class="file-type">PORTAL SENA</span></div>
+              <h3>Agencia Pública de Empleo</h3><p>Accede al portal de la APE para gestionar el certificado. Comprueba que la fecha de expedición corresponda a 2026.</p>
+              <a class="button small" href="https://agenciapublicadeempleo.sena.edu.co/spe-web/spe/login" target="_blank" rel="noopener noreferrer">Abrir portal APE ↗</a>
+            </article>
+            <article class="resource-card video-card">
+              <div class="resource-meta"><span class="resource-icon" aria-hidden="true">▶</span><span class="file-type">VIDEO DE ORIENTACIÓN</span></div>
+              <h3>Video del proceso</h3><p>Reproduce el video de YouTube compartido para acompañar el alistamiento.</p>
+              <div class="video-frame"><iframe src="https://www.youtube.com/embed/O6qF7FrMzBU" title="Video de orientación del proceso de certificación 2026" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+              <div class="video-caption"><span>También puedes abrir el reproductor directamente en YouTube.</span><a href="https://youtu.be/O6qF7FrMzBU" target="_blank" rel="noopener noreferrer">Abrir en YouTube ↗</a></div>
+            </article>
+            <article class="resource-card">
+              <div class="resource-meta"><span class="resource-icon" aria-hidden="true">▤</span><span class="file-type">WORD · .DOCX</span></div>
+              <h3>Recomendaciones del proceso</h3><p>Consulta el documento de recomendaciones compartido como referencia adicional.</p>
+              <a class="resource-link" href="./Recomedaciones%20Proceso%20Certificaci%C3%B3n.docx" download="Recomendaciones-Proceso-Certificacion.docx">Descargar recomendaciones →</a>
+            </article>
+          </div>
+          <div class="footer-note">Los enlaces externos conducen a los portales informados para este proceso. Confirma que estás en el sitio oficial antes de compartir información.</div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script>
+    (() => {
+      "use strict";
+      const tutorialSteps = [
+        {
+          title: "Prepara las carpetas en Drive",
+          shortTitle: "Organiza Drive",
+          intro: "Primero organiza las carpetas compartidas. Se crea una subcarpeta por ficha; dentro de cada ficha se guardan directamente los PDF de los aprendices, sin crear subcarpetas individuales.",
+          items: [
+            { title: "Abre la carpeta compartida", detail: "Busca “Certificación Aprendices Articulación 2026” y entra a la carpeta que te asignaron como instructor." },
+            { title: "Crea una subcarpeta por ficha", detail: "Usa el número de cada ficha asignada. No mezcles aprendices de fichas distintas." },
+            { title: "Dentro de la ficha, guarda un PDF por aprendiz", detail: "No crees otra subcarpeta por aprendiz. Guarda directamente en la carpeta de la ficha el PDF individual con los seis documentos del proceso." },
+            { title: "Nombra el PDF con tipo, documento y ficha", detail: "Usa el formato TIPO_DOCUMENTO_NUMERO_FICHA.pdf. Ejemplo: TI_1075643449_3185400.pdf. TI es el tipo de documento, 1075643449 el número y 3185400 el número de ficha." },
+            { title: "Comprueba que puedes editar", detail: "Antes de cargar documentos, verifica que estás en la carpeta correcta y que tienes permiso para organizar archivos." }
+          ],
+          callout: "Estructura correcta: carpeta del proceso → carpeta asignada al instructor → carpeta de ficha → un PDF por aprendiz. No crees subcarpetas por aprendiz. El nombre del PDF es TIPO_DOCUMENTO_NUMERO_FICHA.pdf; ejemplo: TI_1075643449_3185400.pdf."
+        },
+        {
+          title: "Revisa Sofía Plus y emite juicios",
+          shortTitle: "Revisa Sofía Plus",
+          intro: "Haz esta revisión al inicio para detectar novedades y dar prioridad a los casos que requieren una actualización o evaluación.",
+          items: [
+            { title: "Confirma el listado de la ficha", detail: "Compara los aprendices asignados con los registros disponibles y verifica que cada persona corresponda a la ficha." },
+            { title: "Revisa nombres y documento", detail: "Compara Sofía Plus con el documento vigente: nombres, apellidos, tildes, tipo y número de documento." },
+            { title: "Emite los juicios de evaluación", detail: "Prioriza las evaluaciones y el alistamiento documental antes del 3 de noviembre de 2026, teniendo en cuenta el vencimiento de contratos en noviembre." },
+            { title: "Solicita correcciones si hay diferencias", detail: "Escribe a gaecda@sena.edu.co y adjunta el documento de identidad vigente, legible por ambas caras." }
+          ],
+          callout: "No continúes con datos que no coinciden: solicita la actualización y guarda el documento de identidad legible por ambas caras.",
+          warning: true,
+          actions: [{ label: "Enviar correo de actualización", href: "mailto:gaecda@sena.edu.co" }]
+        },
+        {
+          title: "Solicita los dos oficios a la institución",
+          shortTitle: "Gestiona los oficios",
+          intro: "Pide ambos oficios a la Institución Educativa. Los dos deben relacionar a los aprendices correspondientes y radicarse por OnBase.",
+          items: [
+            { title: "Oficio de paz y salvo", detail: "La institución debe indicar quiénes están a paz y salvo y cuáles aprendices se pueden certificar." },
+            { title: "Oficio de competencias transversales", detail: "La institución debe relacionar a quienes aprobaron las competencias transversales." },
+            { title: "Usa las plantillas compartidas", detail: "Descarga cada formato y coordina su diligenciamiento con la Institución Educativa." },
+            { title: "Radica cada oficio por OnBase", detail: "Usa la Oficina Virtual de Radicación SENA para radicar ambos oficios. Guarda los oficios radicados para incluirlos en el PDF de cada aprendiz." }
+          ],
+          callout: "Estos son dos soportes distintos: verifica que el oficio de paz y salvo y el de transversales estén completos.",
+          actions: [
+            { label: "Abrir Oficina Virtual de Radicación SENA", href: "https://oficinavirtualderadicacion.sena.edu.co/oficinavirtual/radicar.waformularioradicar.aspx", external: true },
+            { label: "Descargar oficio de paz y salvo", href: "./Oficio%20Aprendices%20a%20Certificar%20para%20las%20I.E..docx", download: "Oficio-Aprendices-a-Certificar-para-las-IE.docx" },
+            { label: "Descargar oficio de transversales", href: "./Oficio%20I.E.%20Componente%20Social%20-%20Transversales.docx", download: "Oficio-IE-Componente-Social-Transversales.docx", secondary: true }
+          ]
+        },
+        {
+          title: "Verifica identidad y certificados",
+          shortTitle: "Verifica documentos",
+          intro: "Revisa cada documento por aprendiz antes de armar el PDF. Comprueba que sea legible, vigente y corresponda a la persona.",
+          items: [
+            { title: "Documento de identidad", detail: "Debe estar vigente y legible. Si el aprendiz ya cumplió 18 años, no se tramita la certificación hasta que entregue un documento vigente." },
+            { title: "Certificado de Registraduría", detail: "Debe tener vigencia 2026. Si cumplió 18 y no expiden certificado de vigencia de la nueva cédula, solicita el certificado del documento anterior TI o consulta el certificado de registro civil." },
+            { title: "Certificado de la APE", detail: "Descárgalo desde la Agencia Pública de Empleo y confirma que la fecha de expedición sea de 2026." }
+          ],
+          callout: "Abre los portales oficiales desde estos accesos. El certificado de Registraduría y el de APE deben corresponder a la vigencia 2026.",
+          warning: true,
+          actions: [
+            { label: "Consultar registro civil", href: "https://consultasrc.registraduria.gov.co/ProyectoSCCRC/", external: true, secondary: true },
+            { label: "Vigencia de cédula", href: "https://certvigenciacedula.registraduria.gov.co/Datos.aspx", external: true, secondary: true },
+            { label: "Abrir portal APE", href: "https://agenciapublicadeempleo.sena.edu.co/spe-web/spe/login", external: true }
+          ]
+        },
+        {
+          title: "Completa el formato GFPI-F-023 V06",
+          shortTitle: "Completa el F-023",
+          intro: "Diligencia completamente el formato GFPI-F-023 V06 para la planeación, seguimiento y evaluación de la etapa productiva. Este formato también debe quedar dentro del PDF único de cada aprendiz.",
+          items: [
+            { title: "Diligencia la versión GFPI-F-023 V06", detail: "Asegúrate de trabajar con la versión indicada y completar todos los campos del aprendiz." },
+            { title: "Verifica las tres partes", detail: "Confirma que estén diligenciadas la planeación, el seguimiento y la evaluación de la etapa productiva." },
+            { title: "Alista el formato como sexto documento", detail: "Cuando consolides el PDF, ubica este formato después del certificado de la Agencia Pública de Empleo (APE)." }
+          ],
+          callout: "El GFPI-F-023 V06 no se carga como archivo aparte: debe quedar incluido como la sexta parte del mismo PDF por aprendiz."
+        },
+        {
+          title: "Consolida los seis documentos en un PDF",
+          shortTitle: "Consolida el PDF",
+          intro: "Une los seis documentos en un único archivo PDF por aprendiz. Respeta este orden y guarda el archivo directamente dentro de la carpeta de la ficha:",
+          items: [
+            { title: "1. Oficio de paz y salvo y aprendices certificables", detail: "Incluye el oficio de la Institución Educativa radicado por OnBase." },
+            { title: "2. Oficio de aprobación de competencias transversales", detail: "Incluye el oficio de la Institución Educativa radicado por OnBase." },
+            { title: "3. Documento de identidad", detail: "Debe estar vigente y legible, por ambas caras cuando aplique." },
+            { title: "4. Certificado de la Registraduría", detail: "Debe tener vigencia 2026." },
+            { title: "5. Certificado de la Agencia Pública de Empleo (APE)", detail: "Debe tener fecha de expedición de 2026." },
+            { title: "6. Formato GFPI-F-023 V06", detail: "Incluye el formato totalmente diligenciado para planeación, seguimiento y evaluación de la etapa productiva." },
+            { title: "Combina y revisa el PDF", detail: "Usa una herramienta autorizada por tu centro para unir estos seis documentos. Revisa el orden, la orientación y que cada página se lea bien." }
+          ],
+          callout: "Nombra el PDF TIPO_DOCUMENTO_NUMERO_FICHA.pdf. Ejemplo: TI_1075643449_3185400.pdf (TI = tipo de documento, 1075643449 = número de documento, 3185400 = número de ficha). No crees una subcarpeta por aprendiz: guarda cada PDF directamente en la carpeta de la ficha.",
+          actions: [{ label: "Ver la lista documental completa", view: "checklist", secondary: true }]
+        },
+        {
+          title: "Haz la revisión final y carga a Drive",
+          shortTitle: "Revisa y entrega",
+          intro: "Antes de cerrar el alistamiento, confirma que el expediente está completo y en la carpeta correcta de Drive.",
+          items: [
+            { title: "Revisa de nuevo identidad y vigencias", detail: "No certifiques con un documento vencido. Si el aprendiz es mayor de edad y aún no tiene documento vigente, deja el caso pendiente." },
+            { title: "Confirma el PDF de cada aprendiz", detail: "Verifica que contenga seis documentos: los dos oficios, la identidad, Registraduría, APE y el GFPI-F-023 V06." },
+            { title: "Carga cada PDF directamente en la carpeta de la ficha", detail: "Guarda allí un PDF por aprendiz. El formato GFPI-F-023 V06 va incluido dentro del PDF, no como archivo separado. No crees subcarpetas individuales." },
+            { title: "Atiende los pendientes antes del plazo", detail: "Prioriza juicios y documentos de las fichas asignadas antes del 3 de noviembre de 2026." }
+          ],
+          callout: "Dentro de cada carpeta de ficha van directamente los PDF individuales con los seis documentos. Nombra cada archivo TIPO_DOCUMENTO_NUMERO_FICHA.pdf; ejemplo: TI_1075643449_3185400.pdf. No crees otra carpeta por aprendiz ni cargues el F-023 por separado.",
+          warning: true
+        }
+      ];
+      const viewNames = { dashboard: "Tutorial paso a paso", checklist: "Lista documental", resources: "Recursos y video" };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      let completedTutorialSteps = new Set();
+      let activeTutorialStep = 0;
+      let toastTimer;
+
+      const byId = (id) => document.getElementById(id);
+      const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+      function showToast(message, isError = false) {
+        const toast = byId("toast");
+        toast.textContent = message;
+        toast.classList.toggle("error", isError);
+        toast.hidden = false;
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => { toast.hidden = true; }, 4500);
+      }
+
+      function loadTutorialProgress() {
+        try {
+          const saved = localStorage.getItem("certificacion-tutorial-progreso-2026");
+          if (!saved) return;
+          const parsed = JSON.parse(saved);
+          if (!parsed || !Array.isArray(parsed.completed)) throw new Error("El progreso del tutorial no tiene el formato esperado.");
+          completedTutorialSteps = new Set(parsed.completed.filter((index) => Number.isInteger(index) && index >= 0 && index < tutorialSteps.length));
+          activeTutorialStep = Number.isInteger(parsed.active) && parsed.active >= 0 && parsed.active < tutorialSteps.length ? parsed.active : 0;
+        } catch (error) {
+          showToast("No se pudo leer el avance anterior del tutorial; iniciaremos desde el primer paso.", true);
+          console.error("Error al cargar el avance del tutorial:", error);
+        }
+      }
+
+      function saveTutorialProgress() {
+        try {
+          localStorage.setItem("certificacion-tutorial-progreso-2026", JSON.stringify({
+            completed: [...completedTutorialSteps],
+            active: activeTutorialStep
+          }));
+          return true;
+        } catch (error) {
+          showToast("No se pudo guardar el avance del tutorial en este navegador.", true);
+          console.error("Error al guardar el avance del tutorial:", error);
+          return false;
+        }
+      }
+
+      function renderTutorial() {
+        const completedCount = completedTutorialSteps.size;
+        byId("tutorialProgressText").textContent = `${completedCount} de ${tutorialSteps.length} pasos completados`;
+        byId("tutorialProgressFill").style.width = `${(completedCount / tutorialSteps.length) * 100}%`;
+        byId("tutorialProgressTrack").setAttribute("aria-valuenow", String(completedCount));
+        byId("tutorialStepNav").innerHTML = tutorialSteps.map((step, index) => {
+          const active = index === activeTutorialStep;
+          const complete = completedTutorialSteps.has(index);
+          return `<button type="button" class="tutorial-step-button${active ? " active" : ""}${complete ? " complete" : ""}" data-tutorial-step="${index}"${active ? ' aria-current="step"' : ""}>
+            <span class="tutorial-step-index">${complete ? "✓" : String(index + 1).padStart(2, "0")}</span>
+            <span class="tutorial-step-copy"><strong>${esc(step.shortTitle)}</strong><small>${complete ? "Completado" : `Paso ${index + 1} de ${tutorialSteps.length}`}</small></span>
+          </button>`;
+        }).join("");
+
+        const step = tutorialSteps[activeTutorialStep];
+        const done = completedTutorialSteps.has(activeTutorialStep);
+        const actions = (step.actions ?? []).map((action) => {
+          if (action.view) return `<button type="button" class="button${action.secondary ? " secondary" : ""}" data-open-view="${esc(action.view)}">${esc(action.label)} →</button>`;
+          const target = action.external ? ' target="_blank" rel="noopener noreferrer"' : "";
+          const download = action.download ? ` download="${esc(action.download)}"` : "";
+          return `<a class="button${action.secondary ? " secondary" : ""}" href="${esc(action.href)}"${target}${download}>${esc(action.label)}${action.external ? " ↗" : " ↓"}</a>`;
+        }).join("");
+        byId("tutorialStepDetail").innerHTML = `
+          <div class="tutorial-detail-top"><span class="tutorial-step-kicker">Paso ${activeTutorialStep + 1} de ${tutorialSteps.length}</span>${done ? '<span class="tutorial-done-tag">✓ Completado</span>' : ""}</div>
+          <h2>${esc(step.title)}</h2>
+          <p class="tutorial-intro">${esc(step.intro)}</p>
+          <ol class="tutorial-instructions">${step.items.map((item) => `<li><strong>${esc(item.title)}</strong> ${esc(item.detail)}</li>`).join("")}</ol>
+          <div class="tutorial-callout${step.warning ? " warning" : ""}">${esc(step.callout)}</div>
+          ${actions ? `<div class="tutorial-actions">${actions}</div>` : ""}
+          <div class="tutorial-footer">
+            <button type="button" class="button secondary" data-tutorial-prev${activeTutorialStep === 0 ? " disabled" : ""}>← Anterior</button>
+            <label class="tutorial-check"><input type="checkbox" id="tutorialMarkComplete"${done ? " checked" : ""}> Ya completé este paso</label>
+            <button type="button" class="button" data-tutorial-next${activeTutorialStep === tutorialSteps.length - 1 ? " disabled" : ""}>Siguiente →</button>
+          </div>`;
+      }
+
+      function openView(name) {
+        if (!viewNames[name]) return;
+        document.querySelectorAll(".view").forEach((view) => { view.hidden = view.id !== `view-${name}`; });
+        document.querySelectorAll(".nav-link").forEach((link) => link.classList.toggle("active", link.dataset.view === name));
+        byId("breadcrumbCurrent").textContent = viewNames[name];
+        document.body.classList.remove("menu-open");
+        byId("mobileMenu").setAttribute("aria-expanded", "false");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.querySelectorAll(".nav-link").forEach((link) => link.addEventListener("click", () => openView(link.dataset.view)));
+      document.addEventListener("click", (event) => {
+        const viewButton = event.target.closest("[data-open-view]");
+        if (viewButton) openView(viewButton.dataset.openView);
+        const stepButton = event.target.closest("[data-tutorial-step]");
+        if (stepButton) {
+          activeTutorialStep = Number(stepButton.dataset.tutorialStep);
+          saveTutorialProgress();
+          renderTutorial();
+        }
+        if (event.target.closest("[data-tutorial-prev]")) {
+          activeTutorialStep = Math.max(0, activeTutorialStep - 1);
+          saveTutorialProgress();
+          renderTutorial();
+        }
+        if (event.target.closest("[data-tutorial-next]")) {
+          activeTutorialStep = Math.min(tutorialSteps.length - 1, activeTutorialStep + 1);
+          saveTutorialProgress();
+          renderTutorial();
+        }
+      });
+      document.addEventListener("change", (event) => {
+        if (event.target.id !== "tutorialMarkComplete") return;
+        if (event.target.checked) {
+          completedTutorialSteps.add(activeTutorialStep);
+        } else {
+          completedTutorialSteps.delete(activeTutorialStep);
+        }
+        saveTutorialProgress();
+        renderTutorial();
+      });
+      byId("mobileMenu").addEventListener("click", () => {
+        const open = document.body.classList.toggle("menu-open");
+        byId("mobileMenu").setAttribute("aria-expanded", String(open));
+      });
+      byId("todayLabel").textContent = new Intl.DateTimeFormat("es-CO", { weekday: "short", day: "numeric", month: "short", year: "numeric" }).format(today);
+      loadTutorialProgress();
+      renderTutorial();
+    })();
+  </script>
+</body>
+</html>
